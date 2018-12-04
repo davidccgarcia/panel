@@ -13,9 +13,9 @@ class WelcomeUsersTest extends TestCase
      */
     public function it_welcomes_users_with_nickname()
     {
-        $this->get('greet/david/mono')
+        $this->get('greet/nickname/mono')
             ->assertStatus(200)
-            ->assertSee('Bienvenido David, tu apodo es mono');
+            ->assertSee('Bienvenido mono');
     }
 
     /**
