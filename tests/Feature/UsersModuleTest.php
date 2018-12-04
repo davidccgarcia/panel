@@ -37,4 +37,24 @@ class UsersModuleTest extends TestCase
             ->assertStatus(200)
             ->assertSee('Crear nuevo usuario');
     }
+
+    /**
+     * @tests
+     */
+    public function it_loads_the_edit_users_page()
+    {
+        $this->get('users/5/edit')
+            ->assertStatus(200)
+            ->assertSee('Editar usuario: 5');
+    }
+
+    /**
+     * @tests
+     */
+    public function it_not_loads_the_edit_users_page_with_text()
+    {
+        $this->get('users/text/edit')
+            ->assertStatus(404)
+            ->assertSee('Sorry, the page you are looking for could not be found.');
+    }
 }
