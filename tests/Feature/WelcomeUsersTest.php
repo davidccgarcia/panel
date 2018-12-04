@@ -13,7 +13,7 @@ class WelcomeUsersTest extends TestCase
      */
     public function it_welcomes_users_with_nickname()
     {
-        $this->get('users/david/mono')
+        $this->get('greet/david/mono')
             ->assertStatus(200)
             ->assertSee('Bienvenido David, tu apodo es mono');
     }
@@ -23,7 +23,7 @@ class WelcomeUsersTest extends TestCase
      */
     public function it_welcomes_users_without_nickname()
     {
-        $this->get('users/david')
+        $this->get('greet/david')
             ->assertStatus(200)
             ->assertSee('Bienvenido David');
     }
