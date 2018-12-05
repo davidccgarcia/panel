@@ -12,12 +12,13 @@ class UserController extends Controller
             'Joel',
             'Ellie',
             'Tess',
-            'Jessi'
+            'Jessi',
+            '<script>alert("Hello World");</script>'
         ];
 
-        return view('users', [
-            'users' => $users
-        ]);
+        $title = 'List of users';
+
+        return view('users', compact('users', 'title'));
     }
 
     public function show($id)
