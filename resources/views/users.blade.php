@@ -8,12 +8,14 @@
     <title>Styde.net</title>
 </head>
 <body>
-    <h1><?php echo e($title); ?></h1>
-
+    <h1>{{ $title }}</h1>
+    <hr>
     <ul>
-        <?php foreach ($users as $user): ?>
-        <li><?php echo e($user); ?></li>
-        <?php endforeach ?>
+        @forelse ($users as $user)
+            <li>{{ $user }}</li>
+        @empty
+            <p>No hay usuarios registrados.</p>
+        @endforelse
     </ul>
 </body>
 </html>
