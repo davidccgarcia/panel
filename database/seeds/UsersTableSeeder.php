@@ -18,11 +18,20 @@ class UsersTableSeeder extends Seeder
             ->whereTitle('Desarrollador back-end')
             ->value('id');
 
-        DB::table('users')->insert([
+        // DB::table('users')->insert([
+        //     'profession_id' => $professionId,
+        //     'name' => 'David Garcia',
+        //     'email' => 'ccristhiangarcia@gmail.com',
+        //     'password' => bcrypt('secret')
+        // ]);
+
+        $data = [
             'profession_id' => $professionId,
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => bcrypt('secret')
-        ]);
+        ];
+
+        DB::insert('INSERT INTO users (profession_id, name, email, password) VALUES (:profession_id, :name, :email, :password)', $data);
     }
 }
