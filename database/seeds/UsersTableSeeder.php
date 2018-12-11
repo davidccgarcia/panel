@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
         //    'password' => bcrypt('secret')
         // ];
 
-        User::create([
+        factory(App\User::class)->create([
             'profession_id' => $professionId,
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
@@ -40,21 +40,11 @@ class UsersTableSeeder extends Seeder
             'is_admin' => 1
         ]);
 
-        User::create([
-            'profession_id' => $professionId,
-            'name' => 'Another user',
-            'email' => 'anoter.user@gmail.com',
-            'password' => bcrypt('secret'),
-            'is_admin' => 0
+        factory(App\User::class)->create([
+            'profession_id' => $professionId
         ]);
 
-        User::create([
-            'profession_id' => $professionId,
-            'name' => 'Another user',
-            'email' => 'anoter.user1@gmail.com',
-            'password' => bcrypt('secret'),
-            'is_admin' => 0
-        ]);
+        factory(App\User::class, 48)->create();
 
         // DB::insert('INSERT INTO users (profession_id, name, email, password) VALUES (:profession_id, :name, :email, :password)', $data);
     }

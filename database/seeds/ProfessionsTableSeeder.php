@@ -31,6 +31,8 @@ class ProfessionsTableSeeder extends Seeder
              'title' => 'Diseñador web'
         ]);
 
+        factory(App\Profession::class)->times(17)->create();
+
         // DB::delete('DELETE FROM professions WHERE title = ?', ['Diseñador web']);
     }
 }
