@@ -36,7 +36,24 @@ class UsersTableSeeder extends Seeder
             'profession_id' => $professionId,
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
-            'password' => bcrypt('secret')
+            'password' => bcrypt('secret'),
+            'is_admin' => 1
+        ]);
+
+        User::create([
+            'profession_id' => $professionId,
+            'name' => 'Another user',
+            'email' => 'anoter.user@gmail.com',
+            'password' => bcrypt('secret'),
+            'is_admin' => 0
+        ]);
+
+        User::create([
+            'profession_id' => $professionId,
+            'name' => 'Another user',
+            'email' => 'anoter.user1@gmail.com',
+            'password' => bcrypt('secret'),
+            'is_admin' => 0
         ]);
 
         // DB::insert('INSERT INTO users (profession_id, name, email, password) VALUES (:profession_id, :name, :email, :password)', $data);
