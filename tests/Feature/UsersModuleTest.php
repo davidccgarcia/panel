@@ -2,17 +2,28 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UsersModuleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @test
      */
     public function it_shows_the_user_list()
     {
+        factory(User::class)->create([
+            'name' => 'Joel'
+        ]);
+
+        factory(User::class)->create([
+            'name' => 'Ellie'
+        ]);
+
         $this->get('users')
             ->assertStatus(200)
             ->assertSee('List of users')
