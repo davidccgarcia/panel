@@ -15,9 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('users', 'UserController@index');
+Route::get('users', 'UserController@index')
+    ->name('users');
 
 Route::get('users/{id}', 'UserController@show')
+    ->name('users.details')
     ->where('id', '[0-9]+');
 
 Route::get('users/new', 'UserController@create');
