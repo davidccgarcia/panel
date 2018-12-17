@@ -36,9 +36,19 @@ class UsersModuleTest extends TestCase
      */
     public function it_shows_a_default_message_if_the_user_list_is_empty()
     {
-        $this->get('users/?empty')
+        $this->get('users')
             ->assertStatus(200)
             ->assertSee('No hay usuarios registrados.');
+    }
+
+    /**
+     * @test
+     */
+    public function it_display_a_404_error_if_the_user_is_not_found()
+    {
+        $this->get('/users/1000')
+            ->assertStatus(404)
+            ->assertSee('Pagina no encontrada');
     }
 
     /**
@@ -82,6 +92,6 @@ class UsersModuleTest extends TestCase
     {
         $this->get('users/text/edit')
             ->assertStatus(404)
-            ->assertSee('Sorry, the page you are looking for could not be found.');
+            ->assertSee('Pagina no encontrada');
     }
 }
