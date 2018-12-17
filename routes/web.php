@@ -23,6 +23,7 @@ Route::get('users/{user}', 'UserController@show')
     ->where('user', '[0-9]+');
 
 Route::get('users/new', 'UserController@create');
+Route::post('users/store', 'UserController@store');
 
 Route::get('users/{id}/edit', 'UserController@edit')
     ->where('id', '[0-9]+');

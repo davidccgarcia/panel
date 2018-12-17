@@ -27,6 +27,11 @@ class UserController extends Controller
         return view('users.create');
     }
 
+    public function store()
+    {
+        return "[Procesando formulario...]";
+    }
+
     public function edit($id)
     {
         return view('users.edit', compact('id'));
