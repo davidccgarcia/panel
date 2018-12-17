@@ -18,9 +18,9 @@ Route::get('/', function () {
 Route::get('users', 'UserController@index')
     ->name('users');
 
-Route::get('users/{id}', 'UserController@show')
+Route::get('users/{user}', 'UserController@show')
     ->name('users.details')
-    ->where('id', '[0-9]+');
+    ->where('user', '[0-9]+');
 
 Route::get('users/new', 'UserController@create');
 
