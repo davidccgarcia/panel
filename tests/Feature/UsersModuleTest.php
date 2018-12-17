@@ -76,6 +76,24 @@ class UsersModuleTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_create_a_new_user()
+    {
+        $this->post('users', [
+            'name' => 'David Garcia',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456'
+        ])->assertRedirect(route('users.store'));
+
+        $this->assertCredentials([
+            'name' => 'David Garcia',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456'
+        ]);
+    }
+    
+    /**
      * @tests
      */
     public function it_loads_the_edit_users_page()
