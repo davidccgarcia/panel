@@ -29,7 +29,11 @@ class UserController extends Controller
 
     public function store()
     {
-        $data = request()->all();
+        $data = request()->validate([
+            'name' => 'required'
+        ], [
+            'name.required' => 'El campo nombre es requerido.'
+        ]);
 
         User::create([
             'name' => $data['name'],

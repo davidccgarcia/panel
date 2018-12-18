@@ -92,6 +92,26 @@ class UsersModuleTest extends TestCase
             'password' => '123456'
         ]);
     }
+
+    /**
+     * @test
+     */
+    public function the_name_is_required()
+    {
+        // $this->withoutExceptionHandling();
+
+        $this->from(route('users'))
+            ->post('users', [
+            'name' => '',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456'
+        ])->assertRedirect('users')
+            ->assertSessionHasErrors(['name' => 'El campo nombre es requerido.']);
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'ccristhiangarcia@gmail.com',
+        ]);
+    }
     
     /**
      * @tests
