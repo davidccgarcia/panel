@@ -5,7 +5,7 @@
 @section('content')
     <h1>Crear usuarios</h1>
 
-    {{-- @if ($errors->any())
+    @if ($errors->any())
         <div class="alert alert-danger">
             <p>Por favor corrige los siguientes errores: </p>
             <ul>
@@ -14,18 +14,15 @@
                 @endforeach
             </ul>
         </div>
-    @endif --}}
+    @endif
     <form action="{{ route('users.store') }}" method="POST">
         {{ csrf_field() }}
         <label for="name">Nombre Completo</label>
         <input type="text" name="name" id="name" placeholder="Pablo Perez">
-        @if ($errors->any)
-            <p>{{ $errors->first('name') }}</p>
-        @endif
         <br>
 
         <label for="email">Correo electronico</label>
-        <input type="email" name="email" id="email" placeholder="pperez@example.com" value="{{ old('email') }}">
+        <input type="text" name="email" id="email" placeholder="pperez@example.com" value="{{ old('email') }}">
         <br>
 
         <label for="password">Contraseña</label>
