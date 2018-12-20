@@ -18,7 +18,7 @@
     <form action="{{ route('users.store') }}" method="POST">
         {{ csrf_field() }}
         <label for="name">Nombre Completo</label>
-        <input type="text" name="name" id="name" placeholder="Pablo Perez">
+        <input type="text" name="name" id="name" placeholder="Pablo Perez" value="{{ old('name', $user->name) }}">
         <br>
 
         <label for="email">Correo electronico</label>

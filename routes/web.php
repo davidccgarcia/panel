@@ -26,8 +26,9 @@ Route::get('users/new', 'UserController@create');
 Route::post('users/', 'UserController@store')
     ->name('users.store');
 
-Route::get('users/{id}/edit', 'UserController@edit')
-    ->where('id', '[0-9]+');
+Route::get('users/{user}/edit', 'UserController@edit')
+    ->name('users.edit')
+    ->where('user', '[0-9]+');
 
 Route::get('greet/nickname/{nickname}', 'WelcomeUserController@welcomeWithNickname');
 Route::get('greet/{name}/', 'WelcomeUserController@welcomeWithName');

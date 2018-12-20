@@ -192,11 +192,19 @@ class UsersModuleTest extends TestCase
     /**
      * @test
      */
-    public function it_loads_the_edit_users_page()
+    public function it_loads_the_edit_user_page()
     {
-        $this->get('users/5/edit')
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->get("users/{$user->id}/edit")
             ->assertStatus(200)
-            ->assertSee('Editar usuario: 5');
+            ->assertViewIs('users.edit')
+            ->assertSee('Editar usuario')
+            ->assertViewHas('user', function ($Viewuser) use ($user) {
+                return $Viewuser->id == $user->id;
+            });
     }
 
     /**

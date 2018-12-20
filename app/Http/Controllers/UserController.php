@@ -44,8 +44,8 @@ class UserController extends Controller
         return redirect()->route('users');
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        return view('users.edit', compact('id'));
+        return view('users.edit', compact('user'));
     }
 }
