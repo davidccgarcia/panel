@@ -26,6 +26,9 @@ Route::get('users/new', 'UserController@create');
 Route::post('users/', 'UserController@store')
     ->name('users.store');
 
+Route::put('users/{user}/', 'UserController@update')
+    ->name('users.update');
+
 Route::get('users/{user}/edit', 'UserController@edit')
     ->name('users.edit')
     ->where('user', '[0-9]+');

@@ -48,4 +48,13 @@ class UserController extends Controller
     {
         return view('users.edit', compact('user'));
     }
+
+    public function update(User $user)
+    {
+        $data = request()->all();
+        $data['password'] = bcrypt($data['password']);
+
+        $user->update($data);
+        return redirect('users');
+    }
 }

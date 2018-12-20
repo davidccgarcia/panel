@@ -216,4 +216,26 @@ class UsersModuleTest extends TestCase
             ->assertStatus(404)
             ->assertSee('Pagina no encontrada');
     }
+
+    /**
+     * @test
+     */
+    public function it_updates_a_user()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->put("users/{$user->id}/", [
+            'name' => 'David Garcia',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456'
+        ])->assertRedirect('users');
+
+        $this->assertCredentials([
+            'name' => 'David Garcia',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456'
+        ]);
+    }
 }

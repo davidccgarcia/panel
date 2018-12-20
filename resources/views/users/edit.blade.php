@@ -15,7 +15,8 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('users.edit', $user) }}" method="POST">
+    <form action="{{ route('users.update', $user) }}" method="POST">
+        {{ method_field('PUT') }}
         {{ csrf_field() }}
         <label for="name">Nombre Completo</label>
         <input type="text" name="name" id="name" placeholder="Pablo Perez" value="{{ old('name', $user->name) }}">
