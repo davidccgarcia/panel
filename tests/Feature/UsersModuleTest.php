@@ -258,9 +258,8 @@ class UsersModuleTest extends TestCase
      */
     public function the_email_is_unique_when_updates_user()
     {
-        self::markTestIncomplete();
-        return ;
-
+        $this->withoudtExceptionHandling();
+        
         factory(User::class)->create([
             'email' => 'ccristhiangarcia@gmail.com'
         ]);
@@ -273,7 +272,31 @@ class UsersModuleTest extends TestCase
         ])->assertRedirect('users')
             ->assertSessionHasErrors('email');
 
-        $this->assertEquals(1, User::count());
+        // 
+    }
+
+    /**
+     * @test
+     */
+    public function the_users_email_can_stay_the_same_when_updating_the_user()
+    {
+        // $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create([
+            'email' => 'ccristhiangarcia@gmail.com'
+        ]);
+
+        $this->from(route('users.edit', $user->id))
+            ->put("users/{$user->id}", [
+            'name' => 'David',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '1234567'
+        ])->assertRedirect("users/");
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'David',
+            'email' => 'ccristhiangarcia@gmail.com',
+        ]);
     }
 
     /**
