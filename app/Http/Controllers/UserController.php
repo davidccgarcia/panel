@@ -72,4 +72,11 @@ class UserController extends Controller
         $user->update($data);
         return redirect('users');
     }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('users');
+    }
 }

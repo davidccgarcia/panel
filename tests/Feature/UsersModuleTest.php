@@ -278,6 +278,23 @@ class UsersModuleTest extends TestCase
     /**
      * @test
      */
+    public function it_users_can_delete()
+    {
+        $this->withoutExceptionHandling();
+        
+        $user = factory(User::class)->create();
+
+        $this->delete("users/$user->id")
+            ->assertRedirect('users');
+
+        $this->assertDatabaseMissing('users', [
+            'id' => $user->id
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function the_users_email_can_stay_the_same_when_updating_the_user()
     {
         // $this->withoutExceptionHandling();
