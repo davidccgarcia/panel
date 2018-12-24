@@ -258,8 +258,8 @@ class UsersModuleTest extends TestCase
      */
     public function the_email_is_unique_when_updates_user()
     {
-        $this->withoudtExceptionHandling();
-        
+        // $this->withoutExceptionHandling();
+
         factory(User::class)->create([
             'email' => 'ccristhiangarcia@gmail.com'
         ]);
