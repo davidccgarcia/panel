@@ -22,7 +22,9 @@ Route::get('users/{user}', 'UserController@show')
     ->name('users.details')
     ->where('user', '[0-9]+');
 
-Route::get('users/new', 'UserController@create');
+Route::get('users/new', 'UserController@create')
+    ->name('users.new');
+
 Route::post('users/', 'UserController@store')
     ->name('users.store');
 
@@ -30,7 +32,7 @@ Route::put('users/{user}/', 'UserController@update')
     ->name('users.update');
 
 Route::delete('users/{user}/', 'UserController@destroy')
-    ->name('users.delete');
+    ->name('users.destroy');
 
 Route::get('users/{user}/edit', 'UserController@edit')
     ->name('users.edit')
