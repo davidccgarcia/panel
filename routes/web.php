@@ -19,11 +19,11 @@ Route::get('users', 'UserController@index')
     ->name('users');
 
 Route::get('users/{user}', 'UserController@show')
-    ->name('users.details')
+    ->name('users.show')
     ->where('user', '[0-9]+');
 
-Route::get('users/new', 'UserController@create')
-    ->name('users.new');
+Route::get('users/create', 'UserController@create')
+    ->name('users.create');
 
 Route::post('users/', 'UserController@store')
     ->name('users.store');
