@@ -49,7 +49,9 @@ class UserController extends Controller
                 'email',
                 Rule::unique('users')->ignore($user->id)
             ],
-            'password' => ''
+            'password' => '',
+            'bio' => 'required',
+            'twitter' => ['nullable', 'url']
         ]);
 
         if ($data['password'] != null) {
@@ -60,6 +62,11 @@ class UserController extends Controller
 
 
         $user->update($data);
+        $userProfile = UserProfile::where('user_id', $user->id)->first();
+        $userProfile->bio = $data['bio'];
+        $userProfile->twitter = $data['twitter'];
+        $userProfile->save();
+
         return redirect('users');
     }
 

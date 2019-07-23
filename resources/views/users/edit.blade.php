@@ -28,6 +28,16 @@
 
         <label for="password">Contraseña</label>
         <input type="password" name="password" id="password" placeholder="Minimo 6 caracteres">
+
+        <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea name="bio" id="bio" class="form-control" cols="30" rows="4">{{ old('bio', $user->profile->bio) }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="twitter">Twitter</label>
+            <input type="text" class="form-control" name="twitter" id="twitter" placeholder="https://twitter.com/davidccgarcia" value="{{ old('twitter', $user->profile->twitter) }}">
+        </div>
         <button type="submit" class="btn btn-info">Create user</button>
     </form>
 @endsection
