@@ -128,6 +128,66 @@ class UsersModuleTest extends TestCase
     /**
      * @test
      */
+    public function the_bio_is_required()
+    {
+        $this->from(route('users'))
+            ->post('users', [
+                'name' => 'David Garcia',
+                'email' => 'ccristhiangarcia@gmail.com',
+                'password' => 'secret',
+                'bio' => '',
+                'twitter' => 'https://twitter.com/davidccgarcia'
+            ])->assertRedirect('users')
+                ->assertSessionHasErrors('bio');
+
+        $this->assertDatabaseMissing('user_profiles', [
+            'twitter' => 'https://twitter.com/davidccgarcia'
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function the_twitter_is_optional()
+    {
+        $this->from(route('users'))
+            ->post('users', [
+                'name' => 'David Garcia',
+                'email' => 'ccristhiangarcia@gmail.com',
+                'password' => 'secret',
+                'bio' => 'Desarrollar Laravel y Vue.js',
+                'twitter' => ''
+            ])->assertRedirect('users')
+                ->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('user_profiles', [
+            'twitter' => null
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function the_twitter_field_is_an_url()
+    {
+        $this->from(route('users'))
+            ->post('users', [
+                'name' => 'David Garcia',
+                'email' => 'ccristhiangarcia@gmail.com',
+                'password' => 'secret',
+                'bio' => 'Desarrollar Laravel y Vue.js',
+                'twitter' => '@davidccgarcia'
+            ])->assertRedirect('users')
+            ->assertSessionHasErrors('twitter');
+
+        $this->assertDatabaseMissing('user_profiles', [
+            'twitter' => null
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function the_email_is_required()
     {
         // $this->withoutExceptionHandling();
@@ -305,17 +365,24 @@ class UsersModuleTest extends TestCase
      */
     public function the_users_email_can_stay_the_same_when_updating_the_user()
     {
-        // $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create([
             'email' => 'ccristhiangarcia@gmail.com'
+        ]);
+
+        $user->profile()->create([
+            'bio' => 'Desarrollador Laravel',
+            'twitter' => 'https://twitter.com/davidccgarcia'
         ]);
 
         $this->from(route('users.edit', $user->id))
             ->put("users/{$user->id}", [
             'name' => 'David',
             'email' => 'ccristhiangarcia@gmail.com',
-            'password' => '1234567'
+            'password' => '1234567',
+            'bio' => 'Desarrollador Laravel y Vue.js',
+            'twitter' => ''
         ])->assertRedirect("users/");
 
         $this->assertDatabaseHas('users', [
@@ -336,11 +403,18 @@ class UsersModuleTest extends TestCase
             'password' => bcrypt($oldPassword)
         ]);
 
+        $user->profile()->create([
+            'bio' => 'Desarrollador Laravel',
+            'twitter' => 'https://twitter.com/davidccgarcia'
+        ]);
+
         $this->from(route('users.edit', $user->id))
             ->put("users/{$user->id}", [
             'name' => 'David',
             'email' => 'ccristhiangarcia@gmail.com',
-            'password' => ''
+            'password' => '',
+            'bio' => 'Desarrollador Laravel y Vue.js',
+            'twitter' => ''
         ])->assertRedirect("users/");
 
         $this->assertCredentials([
@@ -358,6 +432,10 @@ class UsersModuleTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
+        $user->profile()->create([
+            'bio' => 'Desarrollador Laravel y Vue.js',
+            'twitter' => ''
+        ]);
 
         $this->get("users/{$user->id}/edit")
             ->assertStatus(200)
@@ -386,17 +464,28 @@ class UsersModuleTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
+        $user->profile()->create([
+            'bio' => 'Desarrollador Laravel',
+            'twitter' => 'https://twitter.com/davidccgarcia'
+        ]);
 
         $this->put("users/{$user->id}/", [
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
-            'password' => '123456'
+            'password' => '123456',
+            'bio' => 'Desarollador Laravel y Vue.js',
+            'twitter' => ''
         ])->assertRedirect('users');
 
         $this->assertCredentials([
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456'
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'bio' => 'Desarollador Laravel y Vue.js',
+            'twitter' => null
         ]);
     }
 }
