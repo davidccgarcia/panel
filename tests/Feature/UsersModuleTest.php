@@ -12,6 +12,13 @@ class UsersModuleTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * The user profession
+     *
+     * @var App\Profession
+     */
+    protected $profession;
+
+    /**
      * @test
      */
     public function it_shows_the_user_list()
@@ -84,12 +91,14 @@ class UsersModuleTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->post('users', $this->getValidData())->assertRedirect(route('users.store'));
+        $this->post('users', $this->getValidData())
+            ->assertRedirect(route('users.store'));
 
         $this->assertCredentials([
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
-            'password' => '123456'
+            'password' => '123456',
+            'profession_id' => $this->profession->id,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
@@ -102,7 +111,7 @@ class UsersModuleTest extends TestCase
     /**
      * @test
      */
-    public function it_twitter_field_is_optional()
+    public function the_twitter_field_is_optional()
     {
         $this->withoutExceptionHandling();
 
@@ -126,6 +135,30 @@ class UsersModuleTest extends TestCase
     /**
      * @test
      */
+    public function the_profession_id_field_is_optional()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->post('users', $this->getValidData([
+            'profession_id' => null,
+        ]))->assertRedirect(route('users.store'));
+
+        $this->assertCredentials([
+            'name' => 'David Garcia',
+            'email' => 'ccristhiangarcia@gmail.com',
+            'password' => '123456',
+            'profession_id' => null,
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'bio' => 'Desarrollador de Laravel y Vue.js',
+            'user_id' => User::findByEmail('ccristhiangarcia@gmail.com')->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function the_name_is_required()
     {
         // $this->withoutExceptionHandling();
@@ -134,7 +167,43 @@ class UsersModuleTest extends TestCase
             ->post('users', $this->getValidData([
                 'name' => '',
             ]))->assertRedirect('users')
-            ->assertSessionHasErrors('name');
+            ->assertSessionHasErrors(['name']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /**
+     * @test
+     */
+    public function the_profession_must_be_valid()
+    {
+        $this->handleValidationExceptions();
+
+        $this->from(route('users'))
+            ->post('users', $this->getValidData([
+                'profession_id' => '999',
+            ]))->assertRedirect('users')
+            ->assertSessionHasErrors(['profession_id']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /**
+     * @test
+     */
+    public function only_no_deleted_at_professions_are_valid()
+    {
+        $deletedProfession = factory(\App\Profession::class)->create([
+            'deleted_at' => now()->format('Y-m-d'),
+        ]);
+
+        $this->handleValidationExceptions();
+
+        $this->from(route('users.create'))
+            ->post('users', $this->getValidData([
+                'profession_id' => $deletedProfession->id,
+            ]))->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['profession_id']);
 
         $this->assertDatabaseEmpty('users');
     }
@@ -150,7 +219,7 @@ class UsersModuleTest extends TestCase
             ->post('users', $this->getValidData([
                 'email' => '',
             ]))->assertRedirect('users')
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email']);
 
         $this->assertDatabaseEmpty('users');
     }
@@ -166,7 +235,7 @@ class UsersModuleTest extends TestCase
             ->post('users', $this->getValidData([
                 'email' => 'correo-no-valido'
             ]))->assertRedirect('users')
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email']);
 
         $this->assertDatabaseEmpty('users');
     }
@@ -184,7 +253,7 @@ class UsersModuleTest extends TestCase
             ->post('users', $this->getValidData([
                 'email' => 'ccristhiangarcia@gmail.com',
             ]))->assertRedirect('users')
-                ->assertSessionHasErrors('email');
+                ->assertSessionHasErrors(['email']);
 
         // $this->assertEquals(1, User::count());
         $this->assertDatabaseCount('users');
@@ -201,7 +270,7 @@ class UsersModuleTest extends TestCase
             ->post('users', $this->getValidData([
                 'password' => ''
             ]))->assertRedirect('users')
-            ->assertSessionHasErrors('password');
+            ->assertSessionHasErrors(['password']);
 
         $this->assertDatabaseEmpty('users');
     }
@@ -221,7 +290,7 @@ class UsersModuleTest extends TestCase
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456'
         ])->assertRedirect("users/{$user->id}/edit")
-            ->assertSessionHasErrors('name');
+            ->assertSessionHasErrors(['name']);
 
         $this->assertDatabaseMissing('users', [
             'email' => 'ccristhiangarcia@gmail.com',
@@ -243,7 +312,7 @@ class UsersModuleTest extends TestCase
             'email' => '',
             'password' => '123456'
         ])->assertRedirect("users/{$user->id}/edit")
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email']);
 
         $this->assertDatabaseMissing('users', ['name' => 'David']);
     }
@@ -263,7 +332,7 @@ class UsersModuleTest extends TestCase
             'email' => 'uncorreo',
             'password' => '123456'
         ])->assertRedirect("users/{$user->id}/edit")
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email']);
 
         $this->assertDatabaseMissing('users', ['email' => 'uncorreo']);
     }
@@ -285,7 +354,7 @@ class UsersModuleTest extends TestCase
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456'
         ])->assertRedirect('users')
-            ->assertSessionHasErrors('email');
+            ->assertSessionHasErrors(['email']);
 
         // 
     }
@@ -409,10 +478,13 @@ class UsersModuleTest extends TestCase
 
     public function getValidData(array $custom = [])
     {
+        $this->profession = factory(\App\Profession::class)->create();
+
         return array_filter(array_merge([
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456',
+            'profession_id' => $this->profession->id,
             'bio' => 'Desarrollador de Laravel y Vue.js',
             'twitter' => 'https://twitter.com/davidccgarcia'
         ], $custom));
