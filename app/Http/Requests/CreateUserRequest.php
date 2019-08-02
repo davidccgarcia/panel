@@ -31,9 +31,12 @@ class CreateUserRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required',
             'bio' => 'required',
-            'twitter' => ['nullable', 'url'],
-            'profession_id' => Rule::exists('professions', 'id')
-                ->whereNull('deleted_at'),
+            'twitter' => ['nullable', 'present', 'url'],
+            'profession_id' => [
+                'nullable', 'present',
+                Rule::exists('professions', 'id')
+                    ->whereNull('deleted_at'),
+            ]
         ];
     }
 
@@ -53,13 +56,12 @@ class CreateUserRequest extends FormRequest
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
-                'profession_id' => $data['profession_id'] ?? null,
             ]);
 
             $user->profile()->create([
                 'bio' => $data['bio'],
-                'twitter' => $data['twitter'] ?? null,
-                'github' => 'https://github.com/davidccgarcia'
+                'twitter' => $data['twitter'],
+                'profession_id' => $data['profession_id'],
             ]);
         });
     }

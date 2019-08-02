@@ -79,9 +79,14 @@ class UsersModuleTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
+        $profession = factory(\App\Profession::class)->create();
+
         $this->get('users/create')
             ->assertStatus(200)
-            ->assertSee('Crear usuario');
+            ->assertSee('Crear usuario')
+            ->assertViewHas('professions', function ($professions) use ($profession) {
+                return $professions->contains($profession);
+            });
     }
 
     /**
@@ -98,13 +103,13 @@ class UsersModuleTest extends TestCase
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456',
-            'profession_id' => $this->profession->id,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Desarrollador de Laravel y Vue.js',
             'twitter' => 'https://twitter.com/davidccgarcia',
             'user_id' => User::findByEmail('ccristhiangarcia@gmail.com')->id,
+            'profession_id' => $this->profession->id,
         ]);
     }
 
@@ -147,12 +152,12 @@ class UsersModuleTest extends TestCase
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456',
-            'profession_id' => null,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Desarrollador de Laravel y Vue.js',
             'user_id' => User::findByEmail('ccristhiangarcia@gmail.com')->id,
+            'profession_id' => null,
         ]);
     }
 
@@ -480,13 +485,13 @@ class UsersModuleTest extends TestCase
     {
         $this->profession = factory(\App\Profession::class)->create();
 
-        return array_filter(array_merge([
+        return array_merge([
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => '123456',
             'profession_id' => $this->profession->id,
             'bio' => 'Desarrollador de Laravel y Vue.js',
             'twitter' => 'https://twitter.com/davidccgarcia'
-        ], $custom));
+        ], $custom);
     }
 }

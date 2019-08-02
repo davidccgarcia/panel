@@ -12,6 +12,6 @@ class UserProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'bio', 'twitter'
+        'bio', 'twitter', 'profession_id'
     ];
 }

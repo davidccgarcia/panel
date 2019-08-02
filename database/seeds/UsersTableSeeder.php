@@ -32,19 +32,23 @@ class UsersTableSeeder extends Seeder
         //    'password' => bcrypt('secret')
         // ];
 
-        factory(App\User::class)->create([
-            'profession_id' => $professionId,
+        $user = factory(App\User::class)->create([
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => bcrypt('secret'),
             'is_admin' => 1
         ]);
 
-        factory(App\User::class)->create([
+        $user->profile()->create([
+            'bio' => 'Desarrollador...',
             'profession_id' => $professionId
         ]);
 
-        factory(App\User::class, 48)->create();
+        factory(App\User::class, 29)->create()->each(function ($user) {
+            $user->profile()->create(
+                factory(App\UserProfile::class)->raw()
+            );
+        });
 
         // DB::insert('INSERT INTO users (profession_id, name, email, password) VALUES (:profession_id, :name, :email, :password)', $data);
     }
