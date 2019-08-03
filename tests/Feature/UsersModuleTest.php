@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\{User, Profession, Skill};
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,7 +14,7 @@ class UsersModuleTest extends TestCase
     /**
      * The user profession
      *
-     * @var App\Profession
+     * @var \App\Profession
      */
     protected $profession;
 
@@ -79,11 +79,21 @@ class UsersModuleTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $profession = factory(\App\Profession::class)->create();
+        $profession = factory(Profession::class)->create();
+        $HTML = factory(Skill::class)->create([
+            'name' => 'HTML'
+        ]);
+
+        $PHP = factory(Skill::class)->create([
+            'name' => 'PHP'
+        ]);
 
         $this->get('users/create')
             ->assertStatus(200)
             ->assertSee('Crear usuario')
+            ->assertViewHas('skills', function ($skills) use ($PHP, $HTML) {
+                return $skills->contains($PHP) && $skills->contains($HTML);
+            })
             ->assertViewHas('professions', function ($professions) use ($profession) {
                 return $professions->contains($profession);
             });
@@ -198,7 +208,7 @@ class UsersModuleTest extends TestCase
      */
     public function only_no_deleted_at_professions_are_valid()
     {
-        $deletedProfession = factory(\App\Profession::class)->create([
+        $deletedProfession = factory(Profession::class)->create([
             'deleted_at' => now()->format('Y-m-d'),
         ]);
 
@@ -483,7 +493,7 @@ class UsersModuleTest extends TestCase
 
     public function getValidData(array $custom = [])
     {
-        $this->profession = factory(\App\Profession::class)->create();
+        $this->profession = factory(Profession::class)->create();
 
         return array_merge([
             'name' => 'David Garcia',

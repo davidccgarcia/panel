@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="profession_id">Profesion</label>
+                    <label for="profession_id">Profesión</label>
                     <select name="profession_id" id="profession_id" class="form-control">
                         <option value="">Seleccione una profesion</option>
                         @foreach($professions as $profession)
@@ -57,8 +57,24 @@
                     <input type="text" class="form-control" name="twitter" id="twitter" placeholder="https://twitter.com/davidccgarcia" value="{{ old('twitter') }}">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Create user</button>
-                <a href="{{ route('users') }}" class="btn btn-link">Regresar al listado de usuarios</a>
+                <h5>Habilidades</h5>
+
+                @foreach ($skills as $skill)
+                    <div class="form-check form-check-inline">
+                        <input name="skills[{{ $skill->id }}]"
+                               class="form-check-input"
+                               type="checkbox" id="skill_{{ $skill->id }}"
+                               value="{{ $skill->id }}"
+                               {{ old("skills.{$skill->id}") ? 'checked' : ''}}
+                        >
+                        <label class="form-check-label" for="skill_{{ $skill->id }}">{{ $skill->name }}</label>
+                    </div>
+                @endforeach
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Create user</button>
+                    <a href="{{ route('users') }}" class="btn btn-link">Regresar al listado de usuarios</a>
+                </div>
             </form>
         </div>
     </div>
