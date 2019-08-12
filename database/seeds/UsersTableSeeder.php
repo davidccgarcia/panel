@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'David Garcia',
             'email' => 'ccristhiangarcia@gmail.com',
             'password' => bcrypt('secret'),
-            'is_admin' => 1
+            'role' => 'admin'
         ]);
 
         $user->profile()->create([
